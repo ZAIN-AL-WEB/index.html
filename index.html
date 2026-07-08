@@ -1,1127 +1,758 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#0f0c29">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Data Saver Guide - دليل توفير الداتا</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #0a0a1a;
-            color: #fff;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-        
-        /* Header */
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 25px 20px 40px;
-            text-align: center;
-            border-radius: 0 0 30px 30px;
-            position: relative;
-            overflow: hidden;
-        }
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-        }
-        .header h1 {
-            font-size: 26px;
-            position: relative;
-            z-index: 1;
-        }
-        .header p {
-            opacity: 0.9;
-            margin-top: 8px;
-            font-size: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        
-        /* Menu button */
-        .menu-btn {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            color: #fff;
-            font-size: 20px;
-            cursor: pointer;
-            z-index: 50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        /* Search */
-        .search-container {
-            padding: 15px 15px 0;
-            margin-top: -20px;
-            position: relative;
-            z-index: 2;
-        }
-        .search-box {
-            width: 100%;
-            padding: 15px 20px 15px 50px;
-            border-radius: 15px;
-            border: none;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 15px;
-            outline: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        .search-box::placeholder { color: #888; }
-        .search-icon {
-            position: absolute;
-            left: 30px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #888;
-            font-size: 18px;
-        }
-        
-        /* Categories */
-        .categories {
-            display: flex;
-            gap: 8px;
-            padding: 15px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .categories::-webkit-scrollbar { display: none; }
-        .cat-btn {
-            flex-shrink: 0;
-            padding: 10px 20px;
-            border-radius: 25px;
-            background: #1a1a2e;
-            border: 1px solid #2a2a4e;
-            color: #aaa;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-        .cat-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #fff;
-            border-color: transparent;
-        }
-        
-        /* App Cards */
-        .apps-list {
-            padding: 0 15px;
-        }
-        .app-card {
-            background: #121228;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border: 1px solid #1e1e3a;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        .app-card:active { transform: scale(0.98); }
-        .app-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, rgba(102,126,234,0.1), transparent);
-            border-radius: 0 0 0 100%;
-        }
-        
-        .app-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 15px;
-            position: relative;
-            z-index: 1;
-        }
-        .app-icon {
-            width: 55px;
-            height: 55px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 26px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 15px rgba(102,126,234,0.3);
-        }
-        .app-info h3 {
-            font-size: 17px;
-            margin-bottom: 4px;
-        }
-        .app-info small {
-            color: #888;
-            font-size: 12px;
-        }
-        .badge {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 10px;
-            font-size: 11px;
-            margin-right: 5px;
-        }
-        .badge-green { background: #22c55e; color: #fff; }
-        .badge-blue { background: #3b82f6; color: #fff; }
-        .badge-purple { background: #8b5cf6; color: #fff; }
-        .badge-orange { background: #f59e0b; color: #fff; }
-        .badge-red { background: #ef4444; color: #fff; }
-        
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 12px 0;
-            position: relative;
-            z-index: 1;
-        }
-        .feature {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 6px 12px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            font-size: 12px;
-            color: #ccc;
-        }
-        .feature-check { color: #22c55e; font-size: 14px; }
-        
-        .saving-bar {
-            margin: 12px 0;
-            position: relative;
-            z-index: 1;
-        }
-        .saving-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-            font-size: 13px;
-        }
-        .saving-label span:last-child { color: #22c55e; font-weight: bold; }
-        .bar-bg {
-            height: 6px;
-            background: rgba(255,255,255,0.08);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        .bar-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.8s ease;
-        }
-        .fill-green { background: linear-gradient(90deg, #22c55e, #4ade80); }
-        .fill-blue { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-        .fill-purple { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-        .fill-orange { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-        .fill-red { background: linear-gradient(90deg, #ef4444, #f87171); }
-        
-        .links {
-            display: flex;
-            gap: 8px;
-            margin-top: 15px;
-            flex-wrap: wrap;
-            position: relative;
-            z-index: 1;
-        }
-        .link-btn {
-            flex: 1;
-            min-width: 100px;
-            padding: 12px;
-            border-radius: 12px;
-            text-decoration: none;
-            color: #fff;
-            font-size: 13px;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-        .link-btn:active { transform: scale(0.95); }
-        .btn-play { background: linear-gradient(135deg, #34d399, #059669); }
-        .btn-app { background: linear-gradient(135deg, #6366f1, #4f46e5); }
-        .btn-web { background: linear-gradient(135deg, #f472b6, #db2777); }
-        
-        /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #0f0f24;
-            border-top: 1px solid #1e1e3a;
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 100;
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: #666;
-            font-size: 11px;
-            text-decoration: none;
-            padding: 5px 15px;
-        }
-        .nav-item.active { color: #667eea; }
-        .nav-icon { font-size: 20px; }
-        
-        .hidden { display: none !important; }
-        
-        /* Stats */
-        .stats-row {
-            display: flex;
-            gap: 10px;
-            padding: 15px;
-        }
-        .stat-box {
-            flex: 1;
-            background: #121228;
-            border-radius: 16px;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid #1e1e3a;
-        }
-        .stat-num {
-            font-size: 24px;
-            font-weight: bold;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .stat-text { color: #888; font-size: 12px; margin-top: 4px; }
-        
-        /* ===== SIDEBAR ===== */
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 200;
-            display: none;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .sidebar-overlay.show {
-            display: block;
-            opacity: 1;
-        }
-        .sidebar {
-            position: fixed;
-            top: 0;
-            right: -320px;
-            width: 320px;
-            max-width: 85vw;
-            height: 100vh;
-            background: #0f0f24;
-            z-index: 201;
-            transition: right 0.3s ease;
-            overflow-y: auto;
-            border-left: 1px solid #1e1e3a;
-        }
-        .sidebar.open { right: 0; }
-        .sidebar-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 30px 20px;
-            text-align: center;
-            position: relative;
-        }
-        .sidebar-header h2 {
-            font-size: 20px;
-        }
-        .sidebar-header p {
-            opacity: 0.9;
-            font-size: 13px;
-            margin-top: 5px;
-        }
-        .sidebar-close {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: #fff;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .sidebar-content {
-            padding: 20px;
-        }
-        .sidebar-section {
-            margin-bottom: 25px;
-        }
-        .sidebar-section h3 {
-            font-size: 14px;
-            color: #667eea;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .sidebar-btn {
-            width: 100%;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        .sidebar-btn:active { transform: scale(0.97); }
-        .btn-feedback {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: #fff;
-        }
-        .btn-complaint {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: #fff;
-        }
-        .btn-suggest {
-            background: linear-gradient(135deg, #22c55e, #16a34a);
-            color: #fff;
-        }
-        .btn-about {
-            background: #1a1a2e;
-            color: #aaa;
-            border: 1px solid #2a2a4e;
-        }
-        
-        /* ===== MESSAGE FORM ===== */
-        .msg-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.85);
-            z-index: 300;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .msg-overlay.show { display: flex; }
-        .msg-box {
-            background: #121228;
-            border-radius: 20px;
-            padding: 25px;
-            width: 100%;
-            max-width: 400px;
-            border: 1px solid #1e1e3a;
-            animation: popIn 0.3s ease;
-        }
-        @keyframes popIn {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .msg-box h3 {
-            text-align: center;
-            margin-bottom: 5px;
-            font-size: 18px;
-        }
-        .msg-box .msg-subtitle {
-            text-align: center;
-            color: #888;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-        .msg-type-label {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            margin-bottom: 15px;
-        }
-        .msg-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 15px;
-            border-radius: 12px;
-            border: 1px solid #2a2a4e;
-            background: #0a0a1a;
-            color: #fff;
-            font-size: 14px;
-            resize: vertical;
-            outline: none;
-            font-family: inherit;
-        }
-        .msg-textarea:focus { border-color: #667eea; }
-        .msg-textarea::placeholder { color: #555; }
-        .msg-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .msg-actions button {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .msg-actions button:active { transform: scale(0.97); }
-        .btn-cancel {
-            background: #1a1a2e;
-            color: #888;
-            border: 1px solid #2a2a4e;
-        }
-        .btn-send {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: #fff;
-        }
-        
-        .install-prompt {
-            position: fixed;
-            bottom: 70px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 12px 25px;
-            border-radius: 25px;
-            font-size: 14px;
-            display: none;
-            z-index: 99;
-            box-shadow: 0 5px 20px rgba(102,126,234,0.4);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateX(-50%) translateY(20px); opacity: 0; }
-            to { transform: translateX(-50%) translateY(0); opacity: 1; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>دليل توفير الداتا</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a1a;color:#fff;min-height:100vh;padding-bottom:80px}
+.header{background:linear-gradient(135deg,#667eea,#764ba2);padding:25px 20px 40px;text-align:center;border-radius:0 0 30px 30px;position:relative}
+.header h1{font-size:24px}.header p{opacity:.9;margin-top:5px;font-size:13px}
+.menu-btn{position:fixed;top:15px;right:15px;width:45px;height:45px;border-radius:12px;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:20px;cursor:pointer;z-index:50;display:flex;align-items:center;justify-content:center}
+.search-container{padding:15px;margin-top:-20px;position:relative;z-index:2}
+.search-box{width:100%;padding:15px 20px 15px 50px;border-radius:15px;border:none;background:#1a1a2e;color:#fff;font-size:15px;outline:none}
+.search-icon{position:absolute;left:30px;top:50%;transform:translateY(-50%);color:#888;font-size:18px}
+.categories{display:flex;gap:8px;padding:15px;overflow-x:auto;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:10px 20px;border-radius:25px;background:#1a1a2e;border:1px solid #2a2a4e;color:#aaa;font-size:13px;cursor:pointer;transition:all .3s;white-space:nowrap}
+.cat-btn.active{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-color:transparent}
+.apps-list{padding:0 15px}
+.app-card{background:#121228;border-radius:20px;padding:20px;margin-bottom:15px;border:1px solid #1e1e3a;position:relative;overflow:hidden}
+.app-header{display:flex;align-items:center;gap:15px;margin-bottom:15px}
+.app-icon{width:55px;height:55px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;background:linear-gradient(135deg,#667eea,#764ba2);box-shadow:0 4px 15px rgba(102,126,234,.3)}
+.app-info h3{font-size:17px;margin-bottom:4px}.app-info small{color:#888;font-size:12px}
+.badge{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;margin-right:5px}
+.badge-green{background:#22c55e}.badge-blue{background:#3b82f6}.badge-purple{background:#8b5cf6}.badge-orange{background:#f59e0b}.badge-red{background:#ef4444}
+.features{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.feature{display:flex;align-items:center;gap:5px;padding:6px 12px;background:rgba(255,255,255,.05);border-radius:8px;font-size:12px;color:#ccc}
+.feature-check{color:#22c55e;font-size:14px}
+.saving-bar{margin:12px 0}.saving-label{display:flex;justify-content:space-between;margin-bottom:6px;font-size:13px}
+.saving-label span:last-child{color:#22c55e;font-weight:bold}
+.bar-bg{height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .8s}
+.fill-green{background:linear-gradient(90deg,#22c55e,#4ade80)}.fill-blue{background:linear-gradient(90deg,#3b82f6,#60a5fa)}.fill-purple{background:linear-gradient(90deg,#8b5cf6,#a78bfa)}.fill-orange{background:linear-gradient(90deg,#f59e0b,#fbbf24)}.fill-red{background:linear-gradient(90deg,#ef4444,#f87171)}
+.links{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}
+.link-btn{flex:1;min-width:100px;padding:12px;border-radius:12px;text-decoration:none;color:#fff;font-size:13px;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-play{background:linear-gradient(135deg,#34d399,#059669)}.btn-app{background:linear-gradient(135deg,#6366f1,#4f46e5)}.btn-web{background:linear-gradient(135deg,#f472b6,#db2777)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#0f0f24;border-top:1px solid #1e1e3a;display:flex;justify-content:space-around;padding:10px 0;z-index:100}
+.nav-item{display:flex;flex-direction:column;align-items:center;gap:4px;color:#666;font-size:11px;text-decoration:none;padding:5px 15px}
+.nav-item.active{color:#667eea}.nav-icon{font-size:20px}
+.hidden{display:none!important}
+.stats-row{display:flex;gap:10px;padding:15px}
+.stat-box{flex:1;background:#121228;border-radius:16px;padding:15px;text-align:center;border:1px solid #1e1e3a}
+.stat-num{font-size:24px;font-weight:bold;background:linear-gradient(135deg,#667eea,#764ba2);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-text{color:#888;font-size:12px;margin-top:4px}
+.sidebar-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:200;display:none;opacity:0;transition:opacity .3s}
+.sidebar-overlay.show{display:block;opacity:1}
+.sidebar{position:fixed;top:0;right:-320px;width:320px;max-width:85vw;height:100vh;background:#0f0f24;z-index:201;transition:right .3s;overflow-y:auto;border-left:1px solid #1e1e3a}
+.sidebar.open{right:0}
+.sidebar-header{background:linear-gradient(135deg,#667eea,#764ba2);padding:30px 20px;text-align:center;position:relative}
+.sidebar-header h2{font-size:20px}.sidebar-header p{opacity:.9;font-size:13px;margin-top:5px}
+.sidebar-close{position:absolute;top:15px;left:15px;background:rgba(255,255,255,.2);border:none;color:#fff;width:35px;height:35px;border-radius:50%;font-size:18px;cursor:pointer}
+.sidebar-content{padding:20px}.sidebar-section{margin-bottom:25px}
+.sidebar-section h3{font-size:14px;color:#667eea;margin-bottom:12px}
+.sidebar-btn{width:100%;padding:14px;border-radius:12px;border:none;font-size:14px;cursor:pointer;margin-bottom:10px}
+.btn-feedback{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff}
+.btn-complaint{background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff}
+.btn-suggest{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff}
+.btn-about{background:#1a1a2e;color:#aaa;border:1px solid #2a2a4e}
+.msg-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.85);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.msg-overlay.show{display:flex}.msg-box{background:#121228;border-radius:20px;padding:25px;width:100%;max-width:400px;border:1px solid #1e1e3a}
+.msg-box h3{text-align:center;margin-bottom:5px;font-size:18px}.msg-subtitle{text-align:center;color:#888;font-size:13px;margin-bottom:15px}
+.msg-type-label{display:inline-block;padding:4px 12px;border-radius:8px;font-size:12px;margin-bottom:15px}
+.msg-textarea{width:100%;min-height:120px;padding:15px;border-radius:12px;border:1px solid #2a2a4e;background:#0a0a1a;color:#fff;font-size:14px;resize:vertical;outline:none;font-family:inherit}
+.msg-actions{display:flex;gap:10px;margin-top:15px}.msg-actions button{flex:1;padding:14px;border-radius:12px;border:none;font-size:14px;cursor:pointer}
+.btn-cancel{background:#1a1a2e;color:#888;border:1px solid #2a2a4e}.btn-send{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff}
+</style>
 </head>
 <body>
-    <button class="menu-btn" onclick="openSidebar()">☰</button>
-    
-    <div class="header">
-        <h1>📱 دليل توفير الداتا</h1>
-        <p>كل التطبيقات اللي بتساعدك توفر نت في مكان واحد</p>
-    </div>
-    
-    <div class="stats-row">
-        <div class="stat-box">
-            <div class="stat-num">25</div>
-            <div class="stat-text">تطبيق</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-num">5</div>
-            <div class="stat-text">فئة</div>
-        </div>
-        <div class="stat-box">
-            <div class="stat-num">90%</div>
-            <div class="stat-text">أقصى توفير</div>
-        </div>
-    </div>
-    
-    <div class="search-container">
-        <span class="search-icon">🔍</span>
-        <input type="text" class="search-box" id="searchInput" placeholder="ابحث عن تطبيق...">
-    </div>
-    
-    <div class="categories">
-        <div class="cat-btn active" data-cat="all">الكل</div>
-        <div class="cat-btn" data-cat="vpn">🛡️ VPN</div>
-        <div class="cat-btn" data-cat="adblock">🚫 Ad-block</div>
-        <div class="cat-btn" data-cat="lite">📱 Lite</div>
-        <div class="cat-btn" data-cat="browser">🌐 متصفح</div>
-        <div class="cat-btn" data-cat="ai">🤖 AI</div>
-    </div>
-    
-    <div class="apps-list" id="appsList">
-        <!-- ========== VPNs (أزرق) ========== -->
-        <div class="app-card" data-cat="vpn">
-            <div class="app-header">
-                <div class="app-icon">🛡️</div>
-                <div class="app-info">
-                    <h3>ProtonVPN <span class="badge badge-blue">مجاني</span></h3>
-                    <small>أفضل VPN مجاني — بيانات غير محدودة</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> لا يحتفظ بسجلات</div>
-                <div class="feature"><span class="feature-check">✓</span> تشفير AES-256</div>
-                <div class="feature"><span class="feature-check">✓</span> يتجنب Throttling</div>
-                <div class="feature"><span class="feature-check">✓</span> Secure Core</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>تجنب تقييد السرعة</span><span>متوسط</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-blue" style="width: 60%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=ch.protonvpn.android" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/proton-vpn-fast-secure/id1437005085" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://protonvpn.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="vpn">
-            <div class="app-header">
-                <div class="app-icon">🔒</div>
-                <div class="app-info">
-                    <h3>Windscribe <span class="badge badge-blue">10GB/شهر</span></h3>
-                    <small>VPN مجاني + حاجب إعلانات</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> 10GB مجانية</div>
-                <div class="feature"><span class="feature-check">✓</span> Ad-block مدمج</div>
-                <div class="feature"><span class="feature-check">✓</span> Firewall</div>
-                <div class="feature"><span class="feature-check">✓</span> سيرفرات متعددة</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير من الإعلانات</span><span>20%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-blue" style="width: 20%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.windscribe.vpn" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://windscribe.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="vpn">
-            <div class="app-header">
-                <div class="app-icon">🌐</div>
-                <div class="app-info">
-                    <h3>Psiphon <span class="badge badge-blue">مجاني</span></h3>
-                    <small>للبلاد المحجوبة — مفتوح المصدر</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> مجاني تماماً</div>
-                <div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
-                <div class="feature"><span class="feature-check">✓</span> يتجاوز الحجب</div>
-                <div class="feature"><span class="feature-check">✓</span> لا يحتاج تسجيل</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير من الحجب</span><span>عالي</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-blue" style="width: 80%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.psiphon3" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://psiphon.ca" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="vpn">
-            <div class="app-header">
-                <div class="app-icon">⚡</div>
-                <div class="app-info">
-                    <h3>Cloudflare WARP <span class="badge badge-blue">مجاني</span></h3>
-                    <small>DNS سريع + VPN خفيف</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> DNS أسرع</div>
-                <div class="feature"><span class="feature-check">✓</span> يحسّن سرعة التصفح</div>
-                <div class="feature"><span class="feature-check">✓</span> يخفي IP</div>
-                <div class="feature"><span class="feature-check">✓</span> من Cloudflare</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>تحسين السرعة</span><span>متوسط</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-blue" style="width: 40%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/1-1-1-1-faster-internet/id1423538626" class="link-btn btn-app" target="_blank">🍎 App</a>
-            </div>
-        </div>
-        
-        <!-- ========== Ad-blockers (أحمر) ========== -->
-        <div class="app-card" data-cat="adblock">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">🚫</div>
-                <div class="app-info">
-                    <h3>AdGuard <span class="badge badge-red">مجاني</span></h3>
-                    <small>حاجب إعلانات قوي — يوفر داتا كتير</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> يحجب الإعلانات في كل التطبيقات</div>
-                <div class="feature"><span class="feature-check">✓</span> حماية من التتبع</div>
-                <div class="feature"><span class="feature-check">✓</span> يحمي من المواقع الخبيثة</div>
-                <div class="feature"><span class="feature-check">✓</span> وضع توفير البطارية</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير من الإعلانات</span><span>30-40%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-red" style="width: 40%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.adguard.android" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://adguard.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="adblock">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626);">🛡️</div>
-                <div class="app-info">
-                    <h3>Blokada <span class="badge badge-red">مجاني</span></h3>
-                    <small>حاجب إعلانات مفتوح المصدر</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
-                <div class="feature"><span class="feature-check">✓</span> لا يحتاج روت</div>
-                <div class="feature"><span class="feature-check">✓</span> يحجب الإعلانات والتتبع</div>
-                <div class="feature"><span class="feature-check">✓</span> VPN خفيف مدمج</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير من الإعلانات</span><span>25-35%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-red" style="width: 35%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=org.blokada.alarm" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://blokada.org" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <!-- ========== Lite Apps (أخضر) ========== -->
-        <div class="app-card" data-cat="lite">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📘</div>
-                <div class="app-info">
-                    <h3>Facebook Lite <span class="badge badge-green">Lite</span></h3>
-                    <small>توفير 70-80% من الداتا</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> حجم 2MB فقط</div>
-                <div class="feature"><span class="feature-check">✓</span> يشتغل على 2G</div>
-                <div class="feature"><span class="feature-check">✓</span> نفس المميزات الأساسية</div>
-                <div class="feature"><span class="feature-check">✓</span> سريع جداً</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير مقارنة بالعادي</span><span>70-80%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-green" style="width: 80%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.facebook.lite" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="lite">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">💬</div>
-                <div class="app-info">
-                    <h3>Messenger Lite <span class="badge badge-green">Lite</span></h3>
-                    <small>توفير 75% من الداتا</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> حجم صغير جداً</div>
-                <div class="feature"><span class="feature-check">✓</span> مكالمات صوتية وفيديو</div>
-                <div class="feature"><span class="feature-check">✓</span> رسائل وصور</div>
-                <div class="feature"><span class="feature-check">✓</span> سريع على النت البطيء</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير مقارنة بالعادي</span><span>75%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-green" style="width: 75%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.facebook.mlite" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="lite">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📷</div>
-                <div class="app-info">
-                    <h3>Instagram Lite <span class="badge badge-green">Lite</span></h3>
-                    <small>توفير 60-70% من الداتا</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> تصفح ونشر صور</div>
-                <div class="feature"><span class="feature-check">✓</span> Stories</div>
-                <div class="feature"><span class="feature-check">✓</span> DM</div>
-                <div class="feature"><span class="feature-check">✓</span> حجم صغير</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير مقارنة بالعادي</span><span>60-70%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-green" style="width: 70%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.instagram.lite" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="lite">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">🎥</div>
-                <div class="app-info">
-                    <h3>YouTube Go <span class="badge badge-green">Lite</span></h3>
-                    <small>توفير 50-60% من الداتا</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> تختار الجودة قبل التحميل</div>
-                <div class="feature"><span class="feature-check">✓</span> تحميل ومشاركة بدون نت</div>
-                <div class="feature"><span class="feature-check">✓</span> معاينة حجم الفيديو</div>
-                <div class="feature"><span class="feature-check">✓</span> يوتيوب خفيف</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير من اختيار الجودة</span><span>50-60%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-green" style="width: 60%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.youtube.mango" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <!-- ========== Browser Tools (برتقالي) ========== -->
-        <div class="app-card" data-cat="browser">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🌊</div>
-                <div class="app-info">
-                    <h3>Opera Mini <span class="badge badge-orange">مجاني</span></h3>
-                    <small>يوفر 90% من داتا التصفح</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> ضغط الصفحات</div>
-                <div class="feature"><span class="feature-check">✓</span> Ad-block مدمج</div>
-                <div class="feature"><span class="feature-check">✓</span> وضع توفير البيانات</div>
-                <div class="feature"><span class="feature-check">✓</span> تحميل الفيديوهات</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير في التصفح</span><span>90%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-orange" style="width: 90%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.opera.mini.native" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/opera-mini-web-browser/id363729560" class="link-btn btn-app" target="_blank">🍎 App</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="browser">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">🚀</div>
-                <div class="app-info">
-                    <h3>Chrome Data Saver <span class="badge badge-orange">مجاني</span></h3>
-                    <small>ضغط بسيط مدمج في Chrome</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> مدمج في Chrome</div>
-                <div class="feature"><span class="feature-check">✓</span> ضغط بسيط</div>
-                <div class="feature"><span class="feature-check">✓</span> سهل التفعيل</div>
-                <div class="feature"><span class="feature-check">✓</span> لا يحتاج تطبيق إضافي</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير في التصفح</span><span>30-40%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-orange" style="width: 40%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.android.chrome" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="browser">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">📊</div>
-                <div class="app-info">
-                    <h3>DataEye <span class="badge badge-orange">مجاني</span></h3>
-                    <small>مراقبة + ضغط + توفير</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> مراقبة الاستهلاك</div>
-                <div class="feature"><span class="feature-check">✓</span> ضغط الصور والفيديو</div>
-                <div class="feature"><span class="feature-check">✓</span> وقف الخلفية</div>
-                <div class="feature"><span class="feature-check">✓</span> إشعارات فورية</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>توفير شامل</span><span>35-45%</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-orange" style="width: 45%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.datausage.monitor" class="link-btn btn-play" target="_blank">📲 Play</a>
-            </div>
-        </div>
-        
-        <!-- ========== AI Tools (بنفسجي) ========== -->
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🤖</div>
-                <div class="app-info">
-                    <h3>ChatGPT <span class="badge badge-purple">مجاني</span></h3>
-                    <small>أشهر مساعد ذكاء اصطناعي</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> محادثات ذكية</div>
-                <div class="feature"><span class="feature-check">✓</span> يكتب ويترجم ويشرح</div>
-                <div class="feature"><span class="feature-check">✓</span> يتعرف على الصور</div>
-                <div class="feature"><span class="feature-check">✓</span> يشتغل على الداتا الخفيف</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 15%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/chatgpt/id6448311069" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://chatgpt.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🧠</div>
-                <div class="app-info">
-                    <h3>Claude <span class="badge badge-purple">مجاني</span></h3>
-                    <small>مساعد AI من Anthropic</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> تحليل ملفات PDF وصور</div>
-                <div class="feature"><span class="feature-check">✓</span> محادثات طويلة</div>
-                <div class="feature"><span class="feature-check">✓</span> دقيق في المعلومات</div>
-                <div class="feature"><span class="feature-check">✓</span> يكتب أكواد برمجية</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 15%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.anthropic.claude" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/claude-ai-assistant/id6473753684" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://claude.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">✨</div>
-                <div class="app-info">
-                    <h3>Gemini <span class="badge badge-purple">مجاني</span></h3>
-                    <small>مساعد Google AI</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> متصل بـ Google</div>
-                <div class="feature"><span class="feature-check">✓</span> يتعرف على الصور والفيديو</div>
-                <div class="feature"><span class="feature-check">✓</span> يتكامل مع Gmail وDrive</div>
-                <div class="feature"><span class="feature-check">✓</span> يشتغل على الداتا الخفيف</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 15%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.bard" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/google-gemini/id6477487789" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://gemini.google.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🔍</div>
-                <div class="app-info">
-                    <h3>Perplexity <span class="badge badge-purple">مجاني</span></h3>
-                    <small>محرك بحث AI ذكي</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> إجابات مع مصادر</div>
-                <div class="feature"><span class="feature-check">✓</span> بحث مباشر على الإنترنت</div>
-                <div class="feature"><span class="feature-check">✓</span> يختصر المقالات</div>
-                <div class="feature"><span class="feature-check">✓</span> يوفر وقت البحث</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 15%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=ai.perplexity.app.android" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/perplexity-ask-anything/id1668000334" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://perplexity.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🎨</div>
-                <div class="app-info">
-                    <h3>Leonardo.ai <span class="badge badge-purple">مجاني</span></h3>
-                    <small>توليد صور بالذكاء الاصطناعي</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> توليد صور من نص</div>
-                <div class="feature"><span class="feature-check">✓</span> 150 صورة مجانية يومياً</div>
-                <div class="feature"><span class="feature-check">✓</span> أنماط متعددة</div>
-                <div class="feature"><span class="feature-check">✓</span> تحرير الصور بالAI</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك متوسط</span><span>متوسط</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 40%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.leonardo.android" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://leonardo.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🎨</div>
-                <div class="app-info">
-                    <h3>Canva AI <span class="badge badge-purple">مجاني</span></h3>
-                    <small>تصميم + AI مدمج</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> تصميم بواسطة AI</div>
-                <div class="feature"><span class="feature-check">✓</span> كتابة محتوى تلقائي</div>
-                <div class="feature"><span class="feature-check">✓</span> تعديل الصور بالAI</div>
-                <div class="feature"><span class="feature-check">✓</span> قوالب جاهزة</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك متوسط</span><span>متوسط</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 40%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.canva.editor" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/canva-design-photo-video/id897446215" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://canva.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🎙️</div>
-                <div class="app-info">
-                    <h3>ElevenLabs <span class="badge badge-purple">مجاني</span></h3>
-                    <small>تحويل نص لصوت بشري</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> أصوات بشرية واقعية</div>
-                <div class="feature"><span class="feature-check">✓</span> يدعم العربية</div>
-                <div class="feature"><span class="feature-check">✓</span> 10,000 حرف مجاني شهرياً</div>
-                <div class="feature"><span class="feature-check">✓</span> استنساخ الأصوات</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك منخفض</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 20%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=com.elevenlabs.elevenlabs" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://elevenlabs.io" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">📊</div>
-                <div class="app-info">
-                    <h3>Gamma <span class="badge badge-purple">مجاني</span></h3>
-                    <small>إنشاء عروض تقديمية بالAI</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> عروض تقديمية من نص</div>
-                <div class="feature"><span class="feature-check">✓</span> تصميم تلقائي</div>
-                <div class="feature"><span class="feature-check">✓</span> قوالب احترافية</div>
-                <div class="feature"><span class="feature-check">✓</span> يدعم العربية</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك منخفض</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 20%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://gamma.app" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">📝</div>
-                <div class="app-info">
-                    <h3>Notion AI <span class="badge badge-purple">مجاني</span></h3>
-                    <small>كتابة وتنظيم بالذكاء الاصطناعي</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> كتابة مقالات تلقائية</div>
-                <div class="feature"><span class="feature-check">✓</span> تلخيص النصوص</div>
-                <div class="feature"><span class="feature-check">✓</span> ترجمة ذكية</div>
-                <div class="feature"><span class="feature-check">✓</span> تنظيم الملاحظات</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
-                <div class="bar-bg"><div class="bar-fill fill-purple" style="width: 15%"></div></div>
-            </div>
-            <div class="links">
-                <a href="https://play.google.com/store/apps/details?id=notion.id" class="link-btn btn-play" target="_blank">📲 Play</a>
-                <a href="https://apps.apple.com/app/notion-notes-docs-tasks/id1232780281" class="link-btn btn-app" target="_blank">🍎 App</a>
-                <a href="https://notion.so" class="link-btn btn-web" target="_blank">🌐 Web</a>
-            </div>
-        </div>
-        
-        <div class="app-card" data-cat="ai">
-            <div class="app-header">
-                <div class="app-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">🤗</div>
-                <div class="app-info">
-                    <h3>Hugging Face <span class="badge badge-purple">مجاني</span></h3>
-                    <small>منصة نماذج AI مفتوحة المصدر</small>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><span class="feature-check">✓</span> آلاف النماذج المجانية</div>
-                <div class="feature"><span class="feature-check">✓</span> يولد صور ونصوص وأصوات</div>
-                <div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
-                <div class="feature"><span class="feature-check">✓</span> مجتمع نشط</div>
-            </div>
-            <div class="saving-bar">
-                <div class="saving-label
+<button class="menu-btn" onclick="openSidebar()">☰</button>
+
+<div class="header">
+<h1>📱 دليل توفير الداتا</h1>
+<p>كل التطبيقات اللي بتساعدك توفر نت في مكان واحد</p>
+</div>
+
+<div class="stats-row">
+<div class="stat-box"><div class="stat-num">25</div><div class="stat-text">تطبيق</div></div>
+<div class="stat-box"><div class="stat-num">5</div><div class="stat-text">فئة</div></div>
+<div class="stat-box"><div class="stat-num">90%</div><div class="stat-text">أقصى توفير</div></div>
+</div>
+
+<div class="search-container">
+<span class="search-icon">🔍</span>
+<input type="text" class="search-box" id="searchInput" placeholder="ابحث عن تطبيق...">
+</div>
+
+<div class="categories">
+<div class="cat-btn active" onclick="filterApps('all',this)">الكل</div>
+<div class="cat-btn" onclick="filterApps('vpn',this)">🛡️ VPN</div>
+<div class="cat-btn" onclick="filterApps('adblock',this)">🚫 Ad-block</div>
+<div class="cat-btn" onclick="filterApps('lite',this)">📱 Lite</div>
+<div class="cat-btn" onclick="filterApps('browser',this)">🌐 متصفح</div>
+<div class="cat-btn" onclick="filterApps('ai',this)">🤖 AI</div>
+</div>
+
+<div class="apps-list" id="appsList">
+
+<!-- VPN -->
+<div class="app-card" data-cat="vpn">
+<div class="app-header">
+<div class="app-icon">🛡️</div>
+<div class="app-info">
+<h3>ProtonVPN <span class="badge badge-blue">مجاني</span></h3>
+<small>أفضل VPN مجاني — بيانات غير محدودة</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> لا يحتفظ بسجلات</div>
+<div class="feature"><span class="feature-check">✓</span> تشفير AES-256</div>
+<div class="feature"><span class="feature-check">✓</span> يتجنب Throttling</div>
+<div class="feature"><span class="feature-check">✓</span> Secure Core</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>تجنب تقييد السرعة</span><span>متوسط</span></div>
+<div class="bar-bg"><div class="bar-fill fill-blue" style="width:60%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=ch.protonvpn.android" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/proton-vpn-fast-secure/id1437005085" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://protonvpn.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="vpn">
+<div class="app-header">
+<div class="app-icon">🔒</div>
+<div class="app-info">
+<h3>Windscribe <span class="badge badge-blue">10GB/شهر</span></h3>
+<small>VPN مجاني + حاجب إعلانات</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> 10GB مجانية</div>
+<div class="feature"><span class="feature-check">✓</span> Ad-block مدمج</div>
+<div class="feature"><span class="feature-check">✓</span> Firewall</div>
+<div class="feature"><span class="feature-check">✓</span> سيرفرات متعددة</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير من الإعلانات</span><span>20%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-blue" style="width:20%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.windscribe.vpn" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://windscribe.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="vpn">
+<div class="app-header">
+<div class="app-icon">🌐</div>
+<div class="app-info">
+<h3>Psiphon <span class="badge badge-blue">مجاني</span></h3>
+<small>للبلاد المحجوبة — مفتوح المصدر</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> مجاني تماماً</div>
+<div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
+<div class="feature"><span class="feature-check">✓</span> يتجاوز الحجب</div>
+<div class="feature"><span class="feature-check">✓</span> لا يحتاج تسجيل</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير من الحجب</span><span>عالي</span></div>
+<div class="bar-bg"><div class="bar-fill fill-blue" style="width:80%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.psiphon3" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://psiphon.ca" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="vpn">
+<div class="app-header">
+<div class="app-icon">⚡</div>
+<div class="app-info">
+<h3>Cloudflare WARP <span class="badge badge-blue">مجاني</span></h3>
+<small>DNS سريع + VPN خفيف</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> DNS أسرع</div>
+<div class="feature"><span class="feature-check">✓</span> يحسّن سرعة التصفح</div>
+<div class="feature"><span class="feature-check">✓</span> يخفي IP</div>
+<div class="feature"><span class="feature-check">✓</span> من Cloudflare</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>تحسين السرعة</span><span>متوسط</span></div>
+<div class="bar-bg"><div class="bar-fill fill-blue" style="width:40%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.cloudflare.onedotonedotonedotone" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/1-1-1-1-faster-internet/id1423538626" class="link-btn btn-app" target="_blank">🍎 App</a>
+</div>
+</div>
+
+<!-- Ad-block -->
+<div class="app-card" data-cat="adblock">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)">🚫</div>
+<div class="app-info">
+<h3>AdGuard <span class="badge badge-red">مجاني</span></h3>
+<small>حاجب إعلانات قوي — يوفر داتا كتير</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> يحجب الإعلانات في كل التطبيقات</div>
+<div class="feature"><span class="feature-check">✓</span> حماية من التتبع</div>
+<div class="feature"><span class="feature-check">✓</span> يحمي من المواقع الخبيثة</div>
+<div class="feature"><span class="feature-check">✓</span> وضع توفير البطارية</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير من الإعلانات</span><span>30-40%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-red" style="width:40%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.adguard.android" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://adguard.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="adblock">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#ef4444,#dc2626)">🛡️</div>
+<div class="app-info">
+<h3>Blokada <span class="badge badge-red">مجاني</span></h3>
+<small>حاجب إعلانات مفتوح المصدر</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
+<div class="feature"><span class="feature-check">✓</span> لا يحتاج روت</div>
+<div class="feature"><span class="feature-check">✓</span> يحجب الإعلانات والتتبع</div>
+<div class="feature"><span class="feature-check">✓</span> VPN خفيف مدمج</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير من الإعلانات</span><span>25-35%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-red" style="width:35%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=org.blokada.alarm" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://blokada.org" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<!-- Lite -->
+<div class="app-card" data-cat="lite">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#22c55e,#16a34a)">📘</div>
+<div class="app-info">
+<h3>Facebook Lite <span class="badge badge-green">Lite</span></h3>
+<small>توفير 70-80% من الداتا</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> حجم 2MB فقط</div>
+<div class="feature"><span class="feature-check">✓</span> يشتغل على 2G</div>
+<div class="feature"><span class="feature-check">✓</span> نفس المميزات الأساسية</div>
+<div class="feature"><span class="feature-check">✓</span> سريع جداً</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير مقارنة بالعادي</span><span>70-80%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-green" style="width:80%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.facebook.lite" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="lite">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#22c55e,#16a34a)">💬</div>
+<div class="app-info">
+<h3>Messenger Lite <span class="badge badge-green">Lite</span></h3>
+<small>توفير 75% من الداتا</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> حجم صغير جداً</div>
+<div class="feature"><span class="feature-check">✓</span> مكالمات صوتية وفيديو</div>
+<div class="feature"><span class="feature-check">✓</span> رسائل وصور</div>
+<div class="feature"><span class="feature-check">✓</span> سريع على النت البطيء</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير مقارنة بالعادي</span><span>75%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-green" style="width:75%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.facebook.mlite" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="lite">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#22c55e,#16a34a)">📷</div>
+<div class="app-info">
+<h3>Instagram Lite <span class="badge badge-green">Lite</span></h3>
+<small>توفير 60-70% من الداتا</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> تصفح ونشر صور</div>
+<div class="feature"><span class="feature-check">✓</span> Stories</div>
+<div class="feature"><span class="feature-check">✓</span> DM</div>
+<div class="feature"><span class="feature-check">✓</span> حجم صغير</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير مقارنة بالعادي</span><span>60-70%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-green" style="width:70%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.instagram.lite" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="lite">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#22c55e,#16a34a)">🎥</div>
+<div class="app-info">
+<h3>YouTube Go <span class="badge badge-green">Lite</span></h3>
+<small>توفير 50-60% من الداتا</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> تختار الجودة قبل التحميل</div>
+<div class="feature"><span class="feature-check">✓</span> تحميل ومشاركة بدون نت</div>
+<div class="feature"><span class="feature-check">✓</span> معاينة حجم الفيديو</div>
+<div class="feature"><span class="feature-check">✓</span> يوتيوب خفيف</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير من اختيار الجودة</span><span>50-60%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-green" style="width:60%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.youtube.mango" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<!-- Browser -->
+<div class="app-card" data-cat="browser">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🌊</div>
+<div class="app-info">
+<h3>Opera Mini <span class="badge badge-orange">مجاني</span></h3>
+<small>يوفر 90% من داتا التصفح</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> ضغط الصفحات</div>
+<div class="feature"><span class="feature-check">✓</span> Ad-block مدمج</div>
+<div class="feature"><span class="feature-check">✓</span> وضع توفير البيانات</div>
+<div class="feature"><span class="feature-check">✓</span> تحميل الفيديوهات</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير في التصفح</span><span>90%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-orange" style="width:90%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.opera.mini.native" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/opera-mini-web-browser/id363729560" class="link-btn btn-app" target="_blank">🍎 App</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="browser">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🚀</div>
+<div class="app-info">
+<h3>Chrome Data Saver <span class="badge badge-orange">مجاني</span></h3>
+<small>ضغط بسيط مدمج في Chrome</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> مدمج في Chrome</div>
+<div class="feature"><span class="feature-check">✓</span> ضغط بسيط</div>
+<div class="feature"><span class="feature-check">✓</span> سهل التفعيل</div>
+<div class="feature"><span class="feature-check">✓</span> لا يحتاج تطبيق إضافي</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير في التصفح</span><span>30-40%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-orange" style="width:40%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.android.chrome" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="browser">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">📊</div>
+<div class="app-info">
+<h3>DataEye <span class="badge badge-orange">مجاني</span></h3>
+<small>مراقبة + ضغط + توفير</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> مراقبة الاستهلاك</div>
+<div class="feature"><span class="feature-check">✓</span> ضغط الصور والفيديو</div>
+<div class="feature"><span class="feature-check">✓</span> وقف الخلفية</div>
+<div class="feature"><span class="feature-check">✓</span> إشعارات فورية</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>توفير شامل</span><span>35-45%</span></div>
+<div class="bar-bg"><div class="bar-fill fill-orange" style="width:45%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.datausage.monitor" class="link-btn btn-play" target="_blank">📲 Play</a>
+</div>
+</div>
+
+<!-- AI -->
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🤖</div>
+<div class="app-info">
+<h3>ChatGPT <span class="badge badge-purple">مجاني</span></h3>
+<small>أشهر مساعد ذكاء اصطناعي</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> محادثات ذكية</div>
+<div class="feature"><span class="feature-check">✓</span> يكتب ويترجم ويشرح</div>
+<div class="feature"><span class="feature-check">✓</span> يتعرف على الصور</div>
+<div class="feature"><span class="feature-check">✓</span> يشتغل على الداتا الخفيف</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:15%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.openai.chatgpt" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/chatgpt/id6448311069" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://chatgpt.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🧠</div>
+<div class="app-info">
+<h3>Claude <span class="badge badge-purple">مجاني</span></h3>
+<small>مساعد AI من Anthropic</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> تحليل ملفات PDF وصور</div>
+<div class="feature"><span class="feature-check">✓</span> محادثات طويلة</div>
+<div class="feature"><span class="feature-check">✓</span> دقيق في المعلومات</div>
+<div class="feature"><span class="feature-check">✓</span> يكتب أكواد برمجية</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:15%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.anthropic.claude" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/claude-ai-assistant/id6473753684" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://claude.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">✨</div>
+<div class="app-info">
+<h3>Gemini <span class="badge badge-purple">مجاني</span></h3>
+<small>مساعد Google AI</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> متصل بـ Google</div>
+<div class="feature"><span class="feature-check">✓</span> يتعرف على الصور والفيديو</div>
+<div class="feature"><span class="feature-check">✓</span> يتكامل مع Gmail وDrive</div>
+<div class="feature"><span class="feature-check">✓</span> يشتغل على الداتا الخفيف</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:15%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.google.android.apps.bard" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/google-gemini/id6477487789" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://gemini.google.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🔍</div>
+<div class="app-info">
+<h3>Perplexity <span class="badge badge-purple">مجاني</span></h3>
+<small>محرك بحث AI ذكي</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> إجابات مع مصادر</div>
+<div class="feature"><span class="feature-check">✓</span> بحث مباشر على الإنترنت</div>
+<div class="feature"><span class="feature-check">✓</span> يختصر المقالات</div>
+<div class="feature"><span class="feature-check">✓</span> يوفر وقت البحث</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:15%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=ai.perplexity.app.android" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/perplexity-ask-anything/id1668000334" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://perplexity.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🎨</div>
+<div class="app-info">
+<h3>Leonardo.ai <span class="badge badge-purple">مجاني</span></h3>
+<small>توليد صور بالذكاء الاصطناعي</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> توليد صور من نص</div>
+<div class="feature"><span class="feature-check">✓</span> 150 صورة مجانية يومياً</div>
+<div class="feature"><span class="feature-check">✓</span> أنماط متعددة</div>
+<div class="feature"><span class="feature-check">✓</span> تحرير الصور بالAI</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك متوسط</span><span>متوسط</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:40%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.leonardo.android" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://leonardo.ai" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🎨</div>
+<div class="app-info">
+<h3>Canva AI <span class="badge badge-purple">مجاني</span></h3>
+<small>تصميم + AI مدمج</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> تصميم بواسطة AI</div>
+<div class="feature"><span class="feature-check">✓</span> كتابة محتوى تلقائي</div>
+<div class="feature"><span class="feature-check">✓</span> تعديل الصور بالAI</div>
+<div class="feature"><span class="feature-check">✓</span> قوالب جاهزة</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك متوسط</span><span>متوسط</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:40%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.canva.editor" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/canva-design-photo-video/id897446215" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://canva.com" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🎙️</div>
+<div class="app-info">
+<h3>ElevenLabs <span class="badge badge-purple">مجاني</span></h3>
+<small>تحويل نص لصوت بشري</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> أصوات بشرية واقعية</div>
+<div class="feature"><span class="feature-check">✓</span> يدعم العربية</div>
+<div class="feature"><span class="feature-check">✓</span> 10,000 حرف مجاني شهرياً</div>
+<div class="feature"><span class="feature-check">✓</span> استنساخ الأصوات</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك منخفض</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:20%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.elevenlabs.elevenlabs" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://elevenlabs.io" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">📊</div>
+<div class="app-info">
+<h3>Gamma <span class="badge badge-purple">مجاني</span></h3>
+<small>إنشاء عروض تقديمية بالAI</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> عروض تقديمية من نص</div>
+<div class="feature"><span class="feature-check">✓</span> تصميم تلقائي</div>
+<div class="feature"><span class="feature-check">✓</span> قوالب احترافية</div>
+<div class="feature"><span class="feature-check">✓</span> يدعم العربية</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك منخفض</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:20%"></div></div>
+</div>
+<div class="links">
+<a href="https://gamma.app" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">📝</div>
+<div class="app-info">
+<h3>Notion AI <span class="badge badge-purple">مجاني</span></h3>
+<small>كتابة وتنظيم بالذكاء الاصطناعي</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> كتابة مقالات تلقائية</div>
+<div class="feature"><span class="feature-check">✓</span> تلخيص النصوص</div>
+<div class="feature"><span class="feature-check">✓</span> ترجمة ذكية</div>
+<div class="feature"><span class="feature-check">✓</span> تنظيم الملاحظات</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك خفيف</span><span>منخفض</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:15%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=notion.id" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://apps.apple.com/app/notion-notes-docs-tasks/id1232780281" class="link-btn btn-app" target="_blank">🍎 App</a>
+<a href="https://notion.so" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+<div class="app-card" data-cat="ai">
+<div class="app-header">
+<div class="app-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">🤗</div>
+<div class="app-info">
+<h3>Hugging Face <span class="badge badge-purple">مجاني</span></h3>
+<small>منصة نماذج AI مفتوحة المصدر</small>
+</div>
+</div>
+<div class="features">
+<div class="feature"><span class="feature-check">✓</span> آلاف النماذج المجانية</div>
+<div class="feature"><span class="feature-check">✓</span> يولد صور ونصوص وأصوات</div>
+<div class="feature"><span class="feature-check">✓</span> مفتوح المصدر</div>
+<div class="feature"><span class="feature-check">✓</span> مجتمع نشط</div>
+</div>
+<div class="saving-bar">
+<div class="saving-label"><span>استهلاك متوسط</span><span>متوسط</span></div>
+<div class="bar-bg"><div class="bar-fill fill-purple" style="width:35%"></div></div>
+</div>
+<div class="links">
+<a href="https://play.google.com/store/apps/details?id=com.huggingface.android" class="link-btn btn-play" target="_blank">📲 Play</a>
+<a href="https://huggingface.co" class="link-btn btn-web" target="_blank">🌐 Web</a>
+</div>
+</div>
+
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+<div class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<button class="sidebar-close" onclick="closeSidebar()">✕</button>
+<h2>☰ القائمة</h2>
+<p>تواصل معنا</p>
+</div>
+<div class="sidebar-content">
+<div class="sidebar-section">
+<h3>📩 التواصل</h3>
+<button class="sidebar-btn btn-feedback" onclick="openMessage('feedback')">💬 اقتراحات</button>
+<button class="sidebar-btn btn-complaint" onclick="openMessage('complaint')">⚠️ شكاوى</button>
+<button class="sidebar-btn btn-suggest" onclick="openMessage('suggest')">💡 أضف تطبيق</button>
+</div>
+<div class="sidebar-section">
+<h3>ℹ️ عن التطبيق</h3>
+<button class="sidebar-btn btn-about" onclick="alert('دليل توفير الداتا - نسخة 1.0')">📱 عن التطبيق</button>
+</div>
+</div>
+</div>
+
+<!-- Message Form -->
+<div class="msg-overlay" id="msgOverlay" onclick="if(event.target===this)closeMessage()">
+<div class="msg-box">
+<h3 id="msgTitle">📩 أرسل رسالتك</h3>
+<p class="msg-subtitle" id="msgSubtitle">نحن نستمع لك</p>
+<div id="msgTypeLabel" class="msg-type-label" style="background:#667eea;color:#fff"></div>
+<textarea class="msg-textarea" id="msgText" placeholder="اكتب رسالتك هنا..."></textarea>
+<div class="msg-actions">
+<button class="btn-cancel" onclick="closeMessage()">إلغاء</button>
+<button class="btn-send" onclick="sendMessage()">📧 إرسال للدعم</button>
+</div>
+</div>
+</div>
+
+<div class="bottom-nav">
+<a href="#" class="nav-item active" onclick="filterApps('all',null);return false"><span class="nav-icon">🏠</span><span>الرئيسية</span></a>
+<a href="#" class="nav-item" onclick="filterApps('vpn',null);return false"><span class="nav-icon">🛡️</span><span>VPN</span></a>
+<a href="#" class="nav-item" onclick="filterApps('lite',null);return false"><span class="nav-icon">⚡</span><span>Lite</span></a>
+<a href="#" class="nav-item" onclick="filterApps('ai',null);return false"><span class="nav-icon">🤖</span><span>AI</span></a>
+</div>
+
+<script>
+// Search
+const searchInput=document.getElementById('searchInput');
+const appCards=document.querySelectorAll('.app-card');
+searchInput.addEventListener('input',function(){
+const term=this.value.toLowerCase();
+appCards.forEach(card=>{const text=card.textContent.toLowerCase();card.classList.toggle('hidden',!text.includes(term))});
+});
+
+// Filter
+function filterApps(cat,btn){
+appCards.forEach(card=>{
+if(cat==='all'||card.dataset.cat===cat){card.classList.remove('hidden')}else{card.classList.add('hidden')}
+});
+if(btn){
+document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+btn.classList.add('active');
+}
+}
+
+// Sidebar
+function openSidebar(){
+document.getElementById('sidebarOverlay').classList.add('show');
+document.getElementById('sidebar').classList.add('open');
+}
+function closeSidebar(){
+document.getElementById('sidebarOverlay').classList.remove('show');
+document.getElementById('sidebar').classList.remove('open');
+}
+
+// Message
+let currentMsgType='';
+function openMessage(type){
+currentMsgType=type;
+const titles={'feedback':['💬 اقتراحات','شاركنا اقتراحاتك','💡 اقتراح'],'complaint':['⚠️ شكاوى','أخبرنا عن مشكلتك','⚠️ شكوى'],'suggest':['💡 أضف تطبيق','اقترح تطبيق جديد','💡 اقتراح تطبيق']};
+const t=titles[type];
+document.getElementById('msgTitle').textContent=t[0];
+document.getElementById('msgSubtitle').textContent=t[1];
+document.getElementById('msgTypeLabel').textContent=t[2];
+document.getElementById('msgText').value='';
+document.getElementById('msgOverlay').classList.add('show');
+closeSidebar();
+}
+function closeMessage(){
+document.getElementById('msgOverlay').classList.remove('show');
+}
+function sendMessage(){
+const text=document.getElementById('msgText').value.trim();
+if(!text){alert('⚠️ من فضلك اكتب رسالتك أولاً');return}
+const typeLabels={'feedback':'اقتراح','complaint':'شكوى','suggest':'اقتراح تطبيق'};
+const subject=encodeURIComponent('📩 '+typeLabels[currentMsgType]+' - دليل توفير الداتا');
+const body=encodeURIComponent('نوع الرسالة: '+typeLabels[currentMsgType]+'\n----------------------------------------\n'+text+'\n----------------------------------------\nتم الإرسال من: دليل توفير الداتا');
+window.location.href='mailto:mozozo365r@gmail.com?subject='+subject+'&body='+body;
+closeMessage();
+}
+</script>
+</body>
+    </html>
