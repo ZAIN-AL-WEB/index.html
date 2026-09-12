@@ -21,6 +21,21 @@
             --dark-bg: #061826;
             --card-bg: rgba(11, 45, 72, 0.7);
             --text-light: #F0F4F8;
+            /* // MODIFIED BY GEMINI: Added CSS Variables for Theme Toggle */
+            --body-bg: var(--dark-bg);
+            --text-color: var(--text-light);
+            --input-bg: rgba(6, 24, 38, 0.8);
+            --header-bg: rgba(11, 45, 72, 0.95);
+        }
+
+        /* // MODIFIED BY GEMINI: Light Theme Overrides */
+        [data-theme="light"] {
+            --body-bg: #f4f7f9;
+            --text-color: #0b2d48;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --input-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --silver: #4a5568;
         }
 
         * {
@@ -32,10 +47,12 @@
         }
 
         body {
-            background-color: var(--dark-bg);
-            color: var(--text-light);
+            /* // MODIFIED BY GEMINI: Uses CSS Variable for Smooth Theme Switching */
+            background-color: var(--body-bg);
+            color: var(--text-color);
             overflow-x: hidden;
             line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         /* Matrix Canvas Background */
@@ -55,11 +72,13 @@
             top: 0;
             right: 0;
             width: 100%;
-            background-color: rgba(11, 45, 72, 0.95);
+            /* // MODIFIED BY GEMINI */
+            background-color: var(--header-bg);
             backdrop-filter: blur(8px);
             border-bottom: 2px solid var(--turquoise);
             z-index: 1000;
             box-shadow: 0 4px 20px rgba(0, 201, 224, 0.15);
+            transition: background-color 0.3s ease;
         }
 
         .navbar {
@@ -85,7 +104,8 @@
         }
 
         .logo-text {
-            color: #fff;
+            /* // MODIFIED BY GEMINI */
+            color: var(--text-color);
             font-weight: 700;
             font-size: 1.1rem;
             line-height: 1.2;
@@ -101,6 +121,7 @@
             display: flex;
             list-style: none;
             gap: 25px;
+            align-items: center;
         }
 
         .nav-links a {
@@ -130,6 +151,34 @@
 
         .nav-links a:hover::after, .nav-links a.active::after {
             width: 100%;
+        }
+
+        /* // MODIFIED BY GEMINI: Dark/Light Mode Switcher & Menu Wrapper */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-toggle {
+            background: transparent;
+            border: 1px solid var(--turquoise);
+            color: var(--turquoise);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--turquoise);
+            color: var(--primary-blue);
+            box-shadow: 0 0 10px rgba(0, 201, 224, 0.4);
         }
 
         .menu-btn {
@@ -180,7 +229,8 @@
             font-size: 2.8rem;
             font-weight: 800;
             margin-bottom: 20px;
-            color: #ffffff;
+            /* // MODIFIED BY GEMINI */
+            color: var(--text-color);
             text-shadow: 0 0 10px rgba(0, 201, 224, 0.4);
         }
 
@@ -191,6 +241,7 @@
             margin-bottom: 35px;
         }
 
+        /* // MODIFIED BY GEMINI: Enhanced Hover for CTA Button */
         .cta-btn {
             display: inline-flex;
             align-items: center;
@@ -203,13 +254,13 @@
             font-weight: 700;
             font-size: 1.1rem;
             box-shadow: 0 4px 15px rgba(0, 201, 224, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 1px solid var(--turquoise);
         }
 
         .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 25px rgba(0, 201, 224, 0.5);
+            transform: scale(1.03) translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 201, 224, 0.6);
         }
 
         /* About Section */
@@ -219,18 +270,20 @@
             gap: 30px;
         }
 
+        /* // MODIFIED BY GEMINI: Enhanced Hover for About Cards */
         .about-card {
             background: var(--card-bg);
             border: 1px solid rgba(0, 201, 224, 0.2);
             padding: 30px;
             border-radius: 12px;
             backdrop-filter: blur(5px);
-            transition: transform 0.3s;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
         .about-card:hover {
-            transform: translateY(-5px);
+            transform: scale(1.03) translateY(-5px);
             border-color: var(--turquoise);
+            box-shadow: 0 10px 25px rgba(0, 201, 224, 0.25);
         }
 
         .about-card i {
@@ -242,7 +295,8 @@
         .about-card h3 {
             font-size: 1.4rem;
             margin-bottom: 10px;
-            color: #fff;
+            /* // MODIFIED BY GEMINI */
+            color: var(--text-color);
         }
 
         /* Services Section */
@@ -252,6 +306,7 @@
             gap: 25px;
         }
 
+        /* // MODIFIED BY GEMINI: Enhanced Hover for Service Boxes */
         .service-box {
             background: var(--card-bg);
             border: 1px solid rgba(192, 192, 192, 0.1);
@@ -260,7 +315,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            transition: all 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease;
         }
 
         .service-box::before {
@@ -274,14 +329,33 @@
         }
 
         .service-box:hover {
+            transform: scale(1.03) translateY(-5px);
             border-color: var(--turquoise);
-            box-shadow: 0 5px 20px rgba(0, 201, 224, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 201, 224, 0.3);
         }
 
         .service-box i {
             font-size: 2.2rem;
             color: var(--turquoise);
             margin-bottom: 15px;
+        }
+
+        .service-box h3 {
+            /* // MODIFIED BY GEMINI */
+            color: var(--text-color);
+            margin-bottom: 10px;
+        }
+
+        /* // MODIFIED BY GEMINI: Animate on Scroll Classes */
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Report Form Section */
@@ -299,6 +373,7 @@
 
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
@@ -315,13 +390,25 @@
         .form-control {
             width: 100%;
             padding: 12px 15px;
-            background: rgba(6, 24, 38, 0.8);
+            /* // MODIFIED BY GEMINI */
+            background: var(--input-bg);
             border: 1px solid rgba(0, 201, 224, 0.3);
             border-radius: 8px;
-            color: #fff;
+            color: var(--text-color);
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.3s;
+            transition: border-color 0.3s, background-color 0.3s, color 0.3s;
+        }
+
+        /* // MODIFIED BY GEMINI: Select option styling */
+        .form-control option {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        [data-theme="light"] .form-control option {
+            background-color: #ffffff;
+            color: #0b2d48;
         }
 
         .form-control:focus {
@@ -332,6 +419,61 @@
         textarea.form-control {
             resize: vertical;
             min-height: 120px;
+        }
+
+        /* // MODIFIED BY GEMINI: File Input Custom Styling */
+        .file-input-wrapper {
+            position: relative;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-custom-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border: 1px dashed var(--turquoise);
+            border-radius: 8px;
+            color: var(--silver);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-custom-btn:hover {
+            border-style: solid;
+            background: rgba(0, 201, 224, 0.1);
+            color: var(--turquoise);
+        }
+
+        .file-names-preview {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: var(--turquoise);
+            word-break: break-all;
+        }
+
+        /* // MODIFIED BY GEMINI: Validation Error Message Styling */
+        .error-message {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group.invalid .error-message {
+            display: flex;
+        }
+
+        .form-group.invalid .form-control,
+        .form-group.invalid .file-custom-btn {
+            border-color: #ff4d4d;
         }
 
         .submit-btn {
@@ -354,6 +496,75 @@
         .submit-btn:hover {
             background: #1ebc57;
             transform: translateY(-2px);
+        }
+
+        /* // MODIFIED BY GEMINI: Success Popup Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 24, 38, 0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: var(--primary-blue);
+            border: 2px solid var(--turquoise);
+            padding: 35px 25px;
+            border-radius: 16px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 201, 224, 0.4);
+            transform: scale(0.8);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 3.5rem;
+            color: #25D366;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .modal-code-box {
+            background: rgba(0, 201, 224, 0.1);
+            border: 1px dashed var(--turquoise);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 800;
+            font-size: 1.3rem;
+            color: var(--turquoise);
+            letter-spacing: 1px;
+        }
+
+        .modal-desc {
+            color: var(--silver);
+            font-size: 0.95rem;
         }
 
         /* Contact Section */
@@ -379,6 +590,11 @@
             margin-bottom: 10px;
         }
 
+        .contact-item h3 {
+            /* // MODIFIED BY GEMINI */
+            color: var(--text-color);
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-blue);
@@ -401,6 +617,7 @@
                 right: -100%;
                 width: 100%;
                 height: calc(100vh - 77px);
+                /* // MODIFIED BY GEMINI */
                 background-color: var(--primary-blue);
                 flex-direction: column;
                 align-items: center;
@@ -468,9 +685,17 @@
                     <span>Cybercrime Anti-Defense - C.A.D</span>
                 </div>
             </a>
-            <div class="menu-btn" id="menu-btn">
-                <i class="fas fa-bars"></i>
+
+            <!-- // MODIFIED BY GEMINI: Dark/Light Switcher & Controls Container -->
+            <div class="nav-controls">
+                <button class="theme-toggle" id="theme-toggle" title="تبديل الوضع">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="menu-btn" id="menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
             </div>
+
             <ul class="nav-links" id="nav-links">
                 <li><a href="#home" class="active">الرئيسية</a></li>
                 <li><a href="#about">من نحن</a></li>
@@ -545,15 +770,19 @@
     <section id="report">
         <h2 class="section-title">تقديم بلاغ</h2>
         <div class="form-container">
-            <form id="reportForm">
+            <form id="reportForm" novalidate>
                 <div class="form-group">
                     <label for="fullName">الاسم الكامل <span class="required">*</span></label>
-                    <input type="text" id="fullName" class="form-control" placeholder="أدخل اسمك بالكامل" required>
+                    <input type="text" id="fullName" class="form-control" placeholder="أدخل اسمك بالكامل">
+                    <!-- // MODIFIED BY GEMINI: Validation Error Text -->
+                    <div class="error-message"><i class="fas fa-circle-exclamation"></i> يرجى إدخال الاسم الكامل</div>
                 </div>
                 
                 <div class="form-group">
                     <label for="contactPhone">رقم المبلغ للتواصل <span class="required">*</span></label>
-                    <input type="tel" id="contactPhone" class="form-control" placeholder="أدخل رقم هاتفك" required>
+                    <input type="tel" id="contactPhone" class="form-control" placeholder="أدخل رقم هاتفك">
+                    <!-- // MODIFIED BY GEMINI: Validation Error Text -->
+                    <div class="error-message"><i class="fas fa-circle-exclamation"></i> يرجى إدخال رقم هاتف صحيح للتواصل</div>
                 </div>
 
                 <div class="form-group">
@@ -561,9 +790,38 @@
                     <input type="tel" id="targetPhone" class="form-control" placeholder="أدخل رقم الهاتف أو حساب الشخص المشتبه به إن وجد">
                 </div>
 
+                <!-- // MODIFIED BY GEMINI: Added Report Type Select Input -->
+                <div class="form-group">
+                    <label for="reportType">نوع البلاغ <span class="required">*</span></label>
+                    <select id="reportType" class="form-control">
+                        <option value="" disabled selected>اختر نوع البلاغ...</option>
+                        <option value="ابتزاز الكتروني">ابتزاز الكتروني</option>
+                        <option value="نصب واحتيال مالي">نصب واحتيال مالي</option>
+                        <option value="اختراق حسابات">اختراق حسابات</option>
+                        <option value="تشهير">تشهير</option>
+                        <option value="اخرى">اخرى</option>
+                    </select>
+                    <div class="error-message"><i class="fas fa-circle-exclamation"></i> يرجى اختيار نوع البلاغ</div>
+                </div>
+
                 <div class="form-group">
                     <label for="reportDetails">وصف البلاغ بالتفصيل <span class="required">*</span></label>
-                    <textarea id="reportDetails" class="form-control" placeholder="اكتب تفاصيل المشكلة أو الجريمة الإلكترونية هنا..." required></textarea>
+                    <textarea id="reportDetails" class="form-control" placeholder="اكتب تفاصيل المشكلة أو الجريمة الإلكترونية هنا..."></textarea>
+                    <!-- // MODIFIED BY GEMINI: Validation Error Text -->
+                    <div class="error-message"><i class="fas fa-circle-exclamation"></i> يرجى كتابة تفاصيل البلاغ</div>
+                </div>
+
+                <!-- // MODIFIED BY GEMINI: Added File Attachment Input -->
+                <div class="form-group">
+                    <label>إرفاق أدلة / صور / اسكرينات (اختياري)</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="evidenceFiles" multiple accept="image/*,.pdf,.zip">
+                        <label for="evidenceFiles" class="file-custom-btn">
+                            <i class="fas fa-paperclip"></i>
+                            <span id="file-btn-text">اضغط هنا لإرفاق الملفات</span>
+                        </label>
+                    </div>
+                    <div class="file-names-preview" id="fileNamesPreview"></div>
                 </div>
 
                 <button type="submit" class="submit-btn">
@@ -572,6 +830,17 @@
             </form>
         </div>
     </section>
+
+    <!-- // MODIFIED BY GEMINI: Success Modal Container -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <i class="fas fa-circle-check modal-icon"></i>
+            <h3 class="modal-title">تم استلام بلاغك بنجاح</h3>
+            <p style="color: var(--silver);">يرجى الاحتفاظ بكود البلاغ لمتابعته:</p>
+            <div class="modal-code-box" id="modalCodeDisplay">CAD-2026-XXXX</div>
+            <p class="modal-desc">جاري تحويلك إلى واتساب لبدء المحادثة المباشرة...</p>
+        </div>
+    </div>
 
     <!-- Contact Section -->
     <section id="contact">
@@ -672,31 +941,171 @@
             });
         });
 
-        // WhatsApp Form Integration
-        document.getElementById('reportForm').addEventListener('submit', function(e) {
+        // // MODIFIED BY GEMINI: Dark/Light Mode Switcher Logic
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const themeIcon = themeToggleBtn.querySelector('i');
+        const savedTheme = localStorage.getItem('cad_theme') || 'dark';
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        applyTheme(savedTheme);
+
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+            localStorage.setItem('cad_theme', newTheme);
+        });
+
+        // // MODIFIED BY GEMINI: Animate On Scroll (AOS) Implementation
+        const cardsToAnimate = document.querySelectorAll('.about-card, .service-box');
+        
+        cardsToAnimate.forEach((card) => {
+            card.classList.add('reveal-item');
+        });
+
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const grid = entry.target.parentElement;
+                    const children = Array.from(grid.children).filter(child => child.classList.contains('reveal-item'));
+                    
+                    children.forEach((child, index) => {
+                        setTimeout(() => {
+                            child.classList.add('revealed');
+                        }, index * 100);
+                    });
+
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        cardsToAnimate.forEach(card => revealObserver.observe(card));
+
+        // // MODIFIED BY GEMINI: File Selection Preview Text
+        const fileInput = document.getElementById('evidenceFiles');
+        const fileBtnText = document.getElementById('file-btn-text');
+        const fileNamesPreview = document.getElementById('fileNamesPreview');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length > 0) {
+                fileBtnText.textContent = `تم اختيار ${fileInput.files.length} ملفات`;
+                const names = Array.from(fileInput.files).map(f => f.name).join(', ');
+                fileNamesPreview.textContent = `الملفات: ${names}`;
+            } else {
+                fileBtnText.textContent = 'اضغط هنا لإرفاق الملفات';
+                fileNamesPreview.textContent = '';
+            }
+        });
+
+        // // MODIFIED BY GEMINI: Form Validation & Enhanced Submission Flow
+        const reportForm = document.getElementById('reportForm');
+        const modal = document.getElementById('successModal');
+        const modalCodeDisplay = document.getElementById('modalCodeDisplay');
+
+        // Clear error styling on user input
+        ['fullName', 'contactPhone', 'reportType', 'reportDetails'].forEach(id => {
+            const input = document.getElementById(id);
+            input.addEventListener('input', () => {
+                input.parentElement.classList.remove('invalid');
+            });
+            if (input.tagName === 'SELECT') {
+                input.addEventListener('change', () => {
+                    input.parentElement.classList.remove('invalid');
+                });
+            }
+        });
+
+        reportForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const fullName = document.getElementById('fullName').value.trim();
-            const contactPhone = document.getElementById('contactPhone').value.trim();
-            const targetPhone = document.getElementById('targetPhone').value.trim() || 'غير محدد';
-            const reportDetails = document.getElementById('reportDetails').value.trim();
+            const fullNameInput = document.getElementById('fullName');
+            const contactPhoneInput = document.getElementById('contactPhone');
+            const reportTypeInput = document.getElementById('reportType');
+            const reportDetailsInput = document.getElementById('reportDetails');
+            const targetPhoneInput = document.getElementById('targetPhone');
 
-            const targetWhatsappNumber = "201210233693";
+            let isValid = true;
+
+            // Validate Full Name
+            if (!fullNameInput.value.trim()) {
+                fullNameInput.parentElement.classList.add('invalid');
+                isValid = false;
+            }
+
+            // Validate Phone Number
+            if (!contactPhoneInput.value.trim()) {
+                contactPhoneInput.parentElement.classList.add('invalid');
+                isValid = false;
+            }
+
+            // Validate Report Type
+            if (!reportTypeInput.value) {
+                reportTypeInput.parentElement.classList.add('invalid');
+                isValid = false;
+            }
+
+            // Validate Details
+            if (!reportDetailsInput.value.trim()) {
+                reportDetailsInput.parentElement.classList.add('invalid');
+                isValid = false;
+            }
+
+            if (!isValid) return;
+
+            // Generate Random 4-Digit Code
+            const randomCodeNum = Math.floor(1000 + Math.random() * 9000);
+            const reportCode = `CAD-2026-${randomCodeNum}`;
+
+            // Show Popup Modal
+            modalCodeDisplay.textContent = reportCode;
+            modal.classList.add('active');
 
             // Format message according to requirements
-            const message = `بلاغ جديد من مركز C.A.D
+            const fullName = fullNameInput.value.trim();
+            const contactPhone = contactPhoneInput.value.trim();
+            const targetPhone = targetPhoneInput.value.trim() || 'غير محدد';
+            const reportType = reportTypeInput.value;
+            const reportDetails = reportDetailsInput.value.trim();
+            const filesCount = fileInput.files.length;
+            const targetWhatsappNumber = "201210233693";
+
+            let message = `بلاغ جديد من مركز C.A.D
+كود البلاغ: ${reportCode}
 الاسم: ${fullName}
 رقم التواصل: ${contactPhone}
 رقم المبلغ عليه: ${targetPhone}
+نوع البلاغ: ${reportType}
 تفاصيل البلاغ:
 ${reportDetails}`;
 
-            // URL Encoding for WhatsApp
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappUrl = `https://wa.me/${targetWhatsappNumber}?text=${encodedMessage}`;
+            if (filesCount > 0) {
+                message += `\n\n(ملاحظة: تم إرفاق ${filesCount} ملفات/صور مع البلاغ)`;
+            }
 
-            // Open WhatsApp
-            window.open(whatsappUrl, '_blank');
+            // Redirect to WhatsApp after 2 seconds
+            setTimeout(() => {
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappUrl = `https://wa.me/${targetWhatsappNumber}?text=${encodedMessage}`;
+                window.open(whatsappUrl, '_blank');
+                
+                // Hide Modal & Reset Form
+                modal.classList.remove('active');
+                reportForm.reset();
+                fileBtnText.textContent = 'اضغط هنا لإرفاق الملفات';
+                fileNamesPreview.textContent = '';
+            }, 2000);
         });
     </script>
 </body>
